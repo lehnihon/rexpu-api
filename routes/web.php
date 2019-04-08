@@ -11,6 +11,8 @@
 |
 */
 
+use \App\Config;
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
@@ -28,6 +30,10 @@ $router->group(
         $router->get('users', function() {
             $users = \App\User::all();
             return response()->json($users);
+        });
+        $router->group(['prefix' => 'config'], function() use ($router) {
+            $router->get('/','ConfigController@edit');
+            $router->put('/','ConfigController@update');
         });
     }
 );
