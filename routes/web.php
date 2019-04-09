@@ -32,7 +32,7 @@ $router->group(
             return response()->json($users);
         });
         $router->group(['prefix' => 'config'], function() use ($router) {
-            $router->get('/','ConfigController@edit');
+            $router->get('/','ConfigController@index');
             $router->put('/','ConfigController@update');
         });
     }

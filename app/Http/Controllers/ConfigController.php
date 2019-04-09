@@ -17,7 +17,7 @@ class ConfigController extends Controller
         //
     }
 
-    public function edit(Config $config){
+    public function index(Config $config){
         $configFirst = $config->get()->first();
         return response()->json($configFirst);
     }

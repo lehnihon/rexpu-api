@@ -14,6 +14,7 @@ class ConfigsTableSeeder extends Seeder
     {
         DB::table('configs')->insert([
             'id' => 1,
+            'wp_endpoint' => '',
             'wp_login' => '',
             'wp_password' => ''
         ]);
