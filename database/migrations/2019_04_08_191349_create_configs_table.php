@@ -14,7 +14,7 @@ class CreateConfigsTable extends Migration
     public function up()
     {
         Schema::create('configs', function (Blueprint $table) {
-            $table->string('id')->unique();
+            $table->string('id_user')->unique();
             $table->string('wp_endpoint');
             $table->string('wp_login');
             $table->string('wp_password');

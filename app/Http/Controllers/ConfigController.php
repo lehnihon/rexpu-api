@@ -23,7 +23,8 @@ class ConfigController extends Controller
     }
 
     public function update(Request $request,Config $config){
-        $configFirst = $config->find(1);
+        $configFirst = $config->find($request->id_user);
+        $configFirst->wp_endpoint = $request->wp_endpoint;
         $configFirst->wp_login = $request->wp_login;
         $configFirst->wp_password = $request->wp_password;
         $configFirst->save();
