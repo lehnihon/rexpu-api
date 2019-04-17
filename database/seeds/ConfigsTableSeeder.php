@@ -13,8 +13,8 @@ class ConfigsTableSeeder extends Seeder
     public function run()
     {
         DB::table('configs')->insert([
-            'id' => 1,
-            'wp_endpoint' => '',
+            'user_id' => 1,
+            'wp_user' => '',
             'wp_login' => '',
             'wp_password' => ''
         ]);
