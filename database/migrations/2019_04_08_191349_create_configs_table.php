@@ -19,6 +19,10 @@ class CreateConfigsTable extends Migration
             $table->string('wp_user');
             $table->string('wp_login');
             $table->string('wp_password');
+            $table->string('bank');
+            $table->string('agency');
+            $table->string('account');
+            $table->string('cpf');
             $table->timestamps();
         });
     }
