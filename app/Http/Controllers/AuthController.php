@@ -36,7 +36,7 @@ class AuthController extends BaseController
             'iss' => "lumen-jwt", // Issuer of the token
             'sub' => $user->id, // Subject of the token
             'iat' => time(), // Time when JWT was issued. 
-            'exp' => time() + 60*60, // Expiration time
+            'exp' => time() + 60*60*24, // Expiration time
             'role' => $user->role
         ];
         
@@ -76,5 +76,14 @@ class AuthController extends BaseController
         return response()->json([
             'error' => 'Email or password is wrong.'
         ], 400);
+    }
+
+    public function refresh() {
+        $token = $this->request->bearerToken();
+        $credentials = JWT::decode($token, env('JWT_SECRET'), ['HS256']);
+        $user = User::find($credentials->sub);
+        return response()->json([
+            'token' => $this->jwt($user)
+        ], 200);
     }
 }

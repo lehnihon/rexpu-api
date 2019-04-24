@@ -17,19 +17,20 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->post(
-    'auth/login', 
-    [
-       'uses' => 'AuthController@authenticate'
-    ]
-);
+$router->post('auth/login', 'AuthController@authenticate');
+
 
 $router->group(
     ['middleware' => 'jwt.auth'], 
     function() use ($router) {
+        $router->post('auth/refresh', 'AuthController@refresh');
         $router->get('users', function() {
             $users = \App\User::all();
             return response()->json($users);
+        });
+        $router->group(['prefix' => 'ticket'], function() use ($router) {
+            $router->get('/','TicketController@index');
+            $router->get('/user/{id}','TicketController@showByUser');
         });
         $router->group(['prefix' => 'config'], function() use ($router) {
             $router->get('/','ConfigController@index');
