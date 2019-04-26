@@ -28,6 +28,14 @@ $router->group(
             $users = \App\User::all();
             return response()->json($users);
         });
+        $router->group(['prefix' => 'subject'], function() use ($router) {
+            $router->get('/','SubjectController@index');
+            $router->post('/','SubjectController@store');
+        });
+        $router->group(['prefix' => 'suggestion'], function() use ($router) {
+            $router->get('/','SuggestionController@index');
+            $router->post('/','SuggestionController@store');
+        });
         $router->group(['prefix' => 'ticket'], function() use ($router) {
             $router->get('/','TicketController@index');
             $router->get('/user/{id}','TicketController@showByUser');

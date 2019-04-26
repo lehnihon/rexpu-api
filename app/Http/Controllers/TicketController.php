@@ -18,8 +18,8 @@ class TicketController extends Controller
     }
 
     public function index(Ticket $ticket){
-        $ticket = $ticket->all();
-        return response()->json($ticket);
+        $ticketAll = $ticket->all();
+        return response()->json($ticketAll);
     }
 
     public function update(){
