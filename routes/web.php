@@ -24,9 +24,9 @@ $router->group(
     ['middleware' => 'jwt.auth'], 
     function() use ($router) {
         $router->post('auth/refresh', 'AuthController@refresh');
-        $router->get('users', function() {
-            $users = \App\User::all();
-            return response()->json($users);
+        $router->group(['prefix' => 'user'], function() use ($router) {
+            $router->get('/','UserController@index');
+            $router->post('/','UserController@store');
         });
         $router->group(['prefix' => 'subject'], function() use ($router) {
             $router->get('/','SubjectController@index');
@@ -38,6 +38,7 @@ $router->group(
         });
         $router->group(['prefix' => 'ticket'], function() use ($router) {
             $router->get('/','TicketController@index');
+            $router->post('/','TicketController@store');
             $router->get('/user/{id}','TicketController@showByUser');
         });
         $router->group(['prefix' => 'config'], function() use ($router) {

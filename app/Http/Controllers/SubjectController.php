@@ -17,9 +17,9 @@ class SubjectController extends Controller
         //
     }
 
-    public function index(Config $config){
-        $configFirst = $config->get()->first();
-        return response()->json($configFirst);
+    public function index(Subject $subject){
+        $subjectAll = $subject->all();
+        return response()->json($subjectAll);
     }
 
     public function store(Request $request){
@@ -29,7 +29,8 @@ class SubjectController extends Controller
         $subject->link = $request->link;
         $subject->obs = $request->obs;
         $subject->user_id = $request->user_id;
-        $suggestion->save();
+        $subject->suggestion_id = $request->suggestion_id;
+        $subject->save();
         return response()->json(["error" => ""],200);
     }
 

@@ -28,6 +28,7 @@ class SuggestionController extends Controller
         $suggestion->title = $request->title;
         $suggestion->link = $request->link;
         $suggestion->description = $request->description;
+        $suggestion->user_id = $request->user_id;
         $suggestion->save();
         return response()->json(["error" => ""],200);
     }
