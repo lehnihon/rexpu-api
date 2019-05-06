@@ -15,5 +15,10 @@ class Ticket extends Model
     {
         return $this->hasOne('App\User');
     }
+
+    public function obs()
+    {
+        return $this->belongsToMany('App\TicketObs');
+    }
     
 }

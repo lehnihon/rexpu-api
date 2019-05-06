@@ -37,6 +37,7 @@ class AuthController extends BaseController
             'sub' => $user->id, // Subject of the token
             'iat' => time(), // Time when JWT was issued. 
             'exp' => time() + 60*60*24, // Expiration time
+            'name' => $user->name,
             'role' => $user->role
         ];
         

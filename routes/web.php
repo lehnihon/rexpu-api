@@ -39,7 +39,20 @@ $router->group(
         $router->group(['prefix' => 'ticket'], function() use ($router) {
             $router->get('/','TicketController@index');
             $router->post('/','TicketController@store');
-            $router->get('/user/{id}','TicketController@showByUser');
+            $router->get('/user/{id}','TicketController@getByUser');
+        });
+        $router->group(['prefix' => 'ticket-obs'], function() use ($router) {
+            $router->post('/','TicketObsController@store');
+            $router->get('/ticket/{id}','TicketObsController@getByTicket');
+        });
+        $router->group(['prefix' => 'asked-questions'], function() use ($router) {
+            $router->get('/','AskedQuestionsController@index');
+            $router->post('/','AskedQuestionsController@store');
+        });
+        $router->group(['prefix' => 'financial'], function() use ($router) {
+            $router->get('/','FinancialController@index');
+            $router->post('/','FinancialController@store');
+            $router->get('/user/{id}','FinancialController@getByUser');
         });
         $router->group(['prefix' => 'config'], function() use ($router) {
             $router->get('/','ConfigController@index');

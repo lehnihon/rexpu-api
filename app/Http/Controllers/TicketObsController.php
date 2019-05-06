@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Ticket;
+use App\TicketObs;
 use Illuminate\Http\Request;
 
-class TicketController extends Controller
+class TicketObsController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -23,12 +24,10 @@ class TicketController extends Controller
     }
 
     public function store(Request $request){
-        $ticket = new Ticket;
-
-        $ticket->title = $request->title;
-        $ticket->description = $request->description;
-        $ticket->user_id = $request->user_id;
-        $ticket->save();
+        $ticketObs = new TicketObs;
+        $ticketObs->ticket_id = $request->ticket_id;
+        $ticketObs->obs = $request->obs;
+        $ticketObs->save();
         return response()->json(["error" => ""],200);
     }
 
@@ -37,9 +36,10 @@ class TicketController extends Controller
         return response()->json(["error" => ""],200);
     }
 
-    public function getByUser($user){
-        $ticket = new Ticket;
-        $ticketByUser = $ticket->where('user_id',$user)->orderBy('id', 'desc')->get();
-        return response()->json($ticketByUser);
+    public function getByTicket($ticket){
+        $ticketObs = new TicketObs;
+        $ticketObsByTicket = $ticketObs->where('ticket_id',$ticket)->orderBy('id', 'desc')->get();
+        return response()->json($ticketObsByTicket);
     }
+
 }
