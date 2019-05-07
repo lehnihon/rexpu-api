@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTicketObsTable extends Migration
+class CreateCpmsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateTicketObsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ticket_obs', function (Blueprint $table) {
+        Schema::create('cpms', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->text('obs');
-            $table->bigInteger('user_id');
-            $table->bigInteger('ticket_id');
+            $table->bigInteger('role_id');
+            $table->float('amount', 8, 2);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateTicketObsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ticket_obs');
+        Schema::dropIfExists('cpms');
     }
 }

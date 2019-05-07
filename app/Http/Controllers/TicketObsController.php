@@ -26,6 +26,7 @@ class TicketObsController extends Controller
     public function store(Request $request){
         $ticketObs = new TicketObs;
         $ticketObs->ticket_id = $request->ticket_id;
+        $ticketObs->user_id = $request->user_id;
         $ticketObs->obs = $request->obs;
         $ticketObs->save();
         return response()->json(["error" => ""],200);
