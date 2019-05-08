@@ -18,6 +18,13 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('wp_user')->nullable();
+            $table->string('wp_login')->nullable();
+            $table->string('wp_password')->nullable();
+            $table->string('bank')->nullable();
+            $table->string('agency')->nullable();
+            $table->string('account')->nullable();
+            $table->string('cpf')->nullable();
             $table->boolean('active');
             $table->timestamps();
         });

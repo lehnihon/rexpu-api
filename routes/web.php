@@ -24,9 +24,16 @@ $router->group(
     ['middleware' => 'jwt.auth'], 
     function() use ($router) {
         $router->post('auth/refresh', 'AuthController@refresh');
+        $router->group(['prefix' => 'cpm'], function() use ($router) {
+            $router->get('/','CPMController@index');
+            $router->post('/','CPMController@store');
+            $router->get('/dashboard','CPMController@getLastCPM');
+        });
         $router->group(['prefix' => 'user'], function() use ($router) {
             $router->get('/','UserController@index');
             $router->post('/','UserController@store');
+            $router->put('/','UserController@update');
+            $router->get('/{id}','UserController@show');
         });
         $router->group(['prefix' => 'subject'], function() use ($router) {
             $router->get('/','SubjectController@index');
@@ -54,9 +61,9 @@ $router->group(
             $router->post('/','FinancialController@store');
             $router->get('/user/{id}','FinancialController@getByUser');
         });
-        $router->group(['prefix' => 'config'], function() use ($router) {
-            $router->get('/','ConfigController@index');
-            $router->put('/','ConfigController@update');
+        $router->group(['prefix' => 'general-config'], function() use ($router) {
+            $router->get('/','GeneralConfigController@index');
+            $router->put('/','GeneralConfigController@update');
         });
     }
 );

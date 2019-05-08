@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class CPM extends Model
 {
+    protected $table = "cpms";
 
     public function role()
     {
-        return $this->hasOne('App\Role');
+        return $this->belongsTo('App\Role');
     }
     
 }

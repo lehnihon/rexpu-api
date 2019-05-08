@@ -22,6 +22,11 @@ class UserController extends Controller
         return response()->json($userAll);
     }
 
+    public function show($user){
+        $user = User::find($user)->first();
+        return response()->json($user);
+    }
+
     public function store(Request $request){
         $user = new User;
 
@@ -29,12 +34,35 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = app('hash')->make($request->password);
         $user->active = true;
+        
         $user->save();
         return response()->json(["error" => ""],200);
     }
 
     public function update(Request $request){
-        
+        $user = User::find($request->id)->first();
+        if(!empty($request->wp_user)){
+            $user->wp_user = $request->wp_user;
+        }
+        if(!empty($request->wp_login)){
+            $user->wp_login = $request->wp_login;
+        }
+        if(!empty($request->wp_password)){
+            $user->wp_password = $request->wp_password;
+        }
+        if(!empty($request->bank)){
+            $user->bank = $request->bank;
+        }
+        if(!empty($request->agency)){
+            $user->agency = $request->agency;
+        }
+        if(!empty($request->account)){
+            $user->account = $request->account;
+        }
+        if(!empty($request->cpf)){
+            $user->cpf = $request->cpf;
+        }
+        $user->save();
         return response()->json(["error" => ""],200);
     }
 }

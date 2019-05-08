@@ -5,18 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class TicketObs extends Model
+class GeneralConfig extends Model
 {
-
-    public function ticket()
-    {
-        return $this->belongsTo('App\Ticket');
-    }
 
     public function user()
     {
         return $this->belongsTo('App\User');
     }
-
     
 }
