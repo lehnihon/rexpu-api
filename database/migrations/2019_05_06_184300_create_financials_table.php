@@ -16,6 +16,7 @@ class CreateFinancialsTable extends Migration
         Schema::create('financials', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
+            $table->string('receipt');
             $table->boolean('done');
             $table->boolean('error');
             $table->text('error_obs');

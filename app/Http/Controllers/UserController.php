@@ -39,6 +39,18 @@ class UserController extends Controller
         return response()->json(["error" => ""],200);
     }
 
+    public function toAccepted(Request $request){
+        $userAll = User::where('accepted','0')->orderBy('id', 'desc')->get();
+        return response()->json($userAll);
+    }
+
+    public function accepted($user){
+        $user = User::find($user)->first();
+        $user->accepted = true;
+        $user->save();
+        return response()->json(["error" => ""],200);
+    }
+    
     public function update(Request $request){
         $user = User::find($request->id)->first();
         if(!empty($request->wp_user)){

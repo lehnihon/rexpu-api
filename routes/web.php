@@ -32,6 +32,8 @@ $router->group(
         $router->group(['prefix' => 'user'], function() use ($router) {
             $router->get('/','UserController@index');
             $router->post('/','UserController@store');
+            $router->post('/accepted/{id}','UserController@accepted');
+            $router->get('/accepted','UserController@toAccepted');
             $router->put('/','UserController@update');
             $router->get('/{id}','UserController@show');
         });
