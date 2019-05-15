@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFinancialsTable extends Migration
+class CreateTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateFinancialsTable extends Migration
      */
     public function up()
     {
-        Schema::create('financials', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
-            $table->string('receipt');
-            $table->boolean('done');
-            $table->text('obs')->nullable();
-            $table->float('amount', 8, 2);
+            $table->float('amount', 8, 2); 
+            $table->float('amount_before', 8, 2);
+            $table->float('value', 8, 2);
             $table->bigInteger('user_id');
             $table->timestamps();
         });
@@ -32,6 +31,6 @@ class CreateFinancialsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('financials');
+        Schema::dropIfExists('transactions');
     }
 }

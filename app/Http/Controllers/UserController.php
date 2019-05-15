@@ -45,8 +45,15 @@ class UserController extends Controller
     }
 
     public function accepted($user){
-        $user = User::find($user)->first();
-        $user->accepted = true;
+        $user = User::find($user);
+        $user->accepted = '1';
+        $user->save();
+        return response()->json(["error" => ""],200);
+    }
+
+    public function notAccepted($user){
+        $user = User::find($user);
+        $user->accepted = '2';
         $user->save();
         return response()->json(["error" => ""],200);
     }

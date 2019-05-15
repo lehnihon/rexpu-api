@@ -33,6 +33,7 @@ $router->group(
             $router->get('/','UserController@index');
             $router->post('/','UserController@store');
             $router->post('/accepted/{id}','UserController@accepted');
+            $router->post('/naccepted/{id}','UserController@notAccepted');
             $router->get('/accepted','UserController@toAccepted');
             $router->put('/','UserController@update');
             $router->get('/{id}','UserController@show');
@@ -61,6 +62,7 @@ $router->group(
         $router->group(['prefix' => 'financial'], function() use ($router) {
             $router->get('/','FinancialController@index');
             $router->post('/','FinancialController@store');
+            $router->post('/{id}','FinancialController@update');
             $router->get('/user/{id}','FinancialController@getByUser');
         });
         $router->group(['prefix' => 'general-config'], function() use ($router) {
