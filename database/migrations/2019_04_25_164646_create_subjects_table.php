@@ -17,6 +17,7 @@ class CreateSubjectsTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->string('link');
+            $table->string('link_hash');
             $table->text('obs');
             $table->bigInteger('suggestion_id');
             $table->bigInteger('user_id');

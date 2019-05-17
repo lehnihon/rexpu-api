@@ -18,7 +18,7 @@ class SuggestionController extends Controller
     }
 
     public function index(Suggestion $suggestion){
-        $suggestionAll = $suggestion->all();
+        $suggestionAll = $suggestion->orderBy('id', 'desc')->get();
         return response()->json($suggestionAll);
     }
 

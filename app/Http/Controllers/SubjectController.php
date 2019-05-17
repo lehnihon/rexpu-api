@@ -18,7 +18,7 @@ class SubjectController extends Controller
     }
 
     public function index(Subject $subject){
-        $subjectAll = $subject->all();
+        $subjectAll = $subject->orderBy('id', 'desc')->get();
         return response()->json($subjectAll);
     }
 
@@ -27,6 +27,7 @@ class SubjectController extends Controller
 
         $subject->title = $request->title;
         $subject->link = $request->link;
+        $subject->link_hash = urlencode(app('hash')->make($request->link));
         $subject->obs = $request->obs;
         $subject->user_id = $request->user_id;
         $subject->suggestion_id = $request->suggestion_id;
@@ -34,6 +35,10 @@ class SubjectController extends Controller
         return response()->json(["error" => ""],200);
     }
 
+    public function link($hash){
+        $subject = Subject::where('link_hash',$hash)->first();
+        return response()->json($subject->link);
+    }
 
     public function update(Request $request,Config $config){
         

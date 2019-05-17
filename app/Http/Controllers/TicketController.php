@@ -18,7 +18,7 @@ class TicketController extends Controller
     }
 
     public function index(Ticket $ticket){
-        $ticketAll = $ticket->all();
+        $ticketAll = $ticket->orderBy('id', 'desc')->get();
         return response()->json($ticketAll);
     }
 

@@ -40,6 +40,7 @@ $router->group(
         });
         $router->group(['prefix' => 'subject'], function() use ($router) {
             $router->get('/','SubjectController@index');
+            $router->get('/link/{hash}','SubjectController@link');
             $router->post('/','SubjectController@store');
         });
         $router->group(['prefix' => 'suggestion'], function() use ($router) {
