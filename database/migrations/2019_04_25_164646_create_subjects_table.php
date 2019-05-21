@@ -21,6 +21,7 @@ class CreateSubjectsTable extends Migration
             $table->text('obs');
             $table->bigInteger('suggestion_id');
             $table->bigInteger('user_id');
+            $table->bigInteger('clicks')->default('0');
             $table->timestamps();
         });
     }

@@ -25,9 +25,11 @@ class CreateUsersTable extends Migration
             $table->string('agency')->nullable();
             $table->string('account')->nullable();
             $table->string('cpf')->nullable();
-            $table->float('amount', 8, 2)->default('0');
+            $table->float('amount', 12, 6)->default('0');
             $table->boolean('active')->default('1');
             $table->char('accepted',1)->default('0');
+            $table->bigInteger('clicks_a')->default('0');
+            $table->bigInteger('clicks_b')->default('0');
             $table->timestamps();
         });
     }

@@ -23,7 +23,7 @@ class UserController extends Controller
     }
 
     public function show($user){
-        $user = User::find($user)->first();
+        $user = User::find($user);
         return response()->json($user);
     }
 
@@ -59,7 +59,22 @@ class UserController extends Controller
     }
     
     public function update(Request $request){
-        $user = User::find($request->id)->first();
+        $user = User::find($request->id);
+        if(!empty($request->name)){
+            $user->name = $request->name;
+        }
+        if(!empty($request->email)){
+            $user->email = $request->email;
+        }
+        if(!empty($request->password)){
+            $user->password = app('hash')->make($request->password);
+        }
+        if(isset($request->accepted)){
+            $user->accepted = $request->accepted;
+        }
+        if(isset($request->active)){
+            $user->active = $request->active;
+        }
         if(!empty($request->wp_user)){
             $user->wp_user = $request->wp_user;
         }

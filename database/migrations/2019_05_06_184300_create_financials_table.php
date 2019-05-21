@@ -19,7 +19,7 @@ class CreateFinancialsTable extends Migration
             $table->string('receipt');
             $table->boolean('done');
             $table->text('obs')->nullable();
-            $table->float('amount', 8, 2);
+            $table->float('amount', 12, 6);
             $table->bigInteger('user_id');
             $table->timestamps();
         });

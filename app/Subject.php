@@ -10,12 +10,12 @@ class Subject extends Model
 
     public function suggestion()
     {
-        return $this->hasOne('App\Suggestion');
+        return $this->belongsTo('App\Suggestion');
     }
 
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->belongsTo('App\User');
     }
     
 }
