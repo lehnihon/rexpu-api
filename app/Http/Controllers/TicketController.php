@@ -38,8 +38,7 @@ class TicketController extends Controller
     }
 
     public function getByUser($user){
-        $ticket = new Ticket;
-        $ticketByUser = $ticket->where('user_id',$user)->orderBy('id', 'desc')->get();
+        $ticketByUser = Ticket::with('user')->where('user_id',$user)->orderBy('id', 'desc')->get();
         return response()->json($ticketByUser);
     }
 }

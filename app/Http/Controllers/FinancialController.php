@@ -56,8 +56,7 @@ class FinancialController extends Controller
     }
 
     public function getByUser($user){
-        $financial = new Financial;
-        $financialByUser = $financial->where('user_id',$user)->orderBy('id', 'desc')->get();
+        $financialByUser = Financial::with('user')->where('user_id',$user)->orderBy('id', 'desc')->get();
         return response()->json($financialByUser);
     }
 

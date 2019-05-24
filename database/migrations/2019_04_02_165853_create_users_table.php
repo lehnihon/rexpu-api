@@ -30,6 +30,8 @@ class CreateUsersTable extends Migration
             $table->char('accepted',1)->default('0');
             $table->bigInteger('clicks_a')->default('0');
             $table->bigInteger('clicks_b')->default('0');
+            $table->float('cpm_a', 8, 2)->default('0');
+            $table->float('cpm_b', 8, 2)->default('0');
             $table->timestamps();
         });
     }

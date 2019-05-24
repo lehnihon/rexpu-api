@@ -41,6 +41,8 @@ $router->group(
         $router->group(['prefix' => 'subject'], function() use ($router) {
             $router->get('/','SubjectController@index');
             $router->post('/','SubjectController@store');
+            $router->get('/user/{id}','SubjectController@getByUserLink');
+            $router->put('/disable','SubjectController@disable');
         });
         $router->group(['prefix' => 'suggestion'], function() use ($router) {
             $router->get('/','SuggestionController@index');

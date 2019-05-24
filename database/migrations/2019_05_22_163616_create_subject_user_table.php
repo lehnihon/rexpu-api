@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSubjectsTable extends Migration
+class CreateSubjectUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('subjects', function (Blueprint $table) {
+        Schema::create('subject_user', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title');
-            $table->string('link');
-            $table->text('obs');
-            $table->bigInteger('suggestion_id');
             $table->bigInteger('user_id');
-            $table->bigInteger('clicks')->default('0');
-            $table->boolean('active')->default('1');
+            $table->bigInteger('subject_id');
+            $table->string('link_hash');
             $table->timestamps();
         });
     }
@@ -33,6 +29,6 @@ class CreateSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subjects');
+        Schema::dropIfExists('subject_user');
     }
 }
