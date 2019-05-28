@@ -57,16 +57,27 @@ class SubjectController extends Controller
         $filter = function ($query) use($hash) {
             $query->where('link_hash',$hash);
         };
+
         $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->get();
-        $cpmp = CPM::where('role_id',2)->orderBy('id', 'desc')->first();
-        $cpmr = CPM::where('role_id',3)->orderBy('id', 'desc')->first();
-        $subject[0]->user->amount = $subject[0]->user->amount+($cpmr->amount/1000);
+        if($subject[0]->user->cpm_b == '0'){
+            $cpm = CPM::where('role_id',3)->orderBy('id', 'desc')->first();
+            $cpmr = $cpm->amount;
+        }else{
+            $cpmr = $subject[0]->user->cpm_b;
+        }
+        $subject[0]->user->amount = $subject[0]->user->amount+($cpmr/1000);
         $subject[0]->user->clicks_b = $subject[0]->user->clicks_b+1;
         $subject[0]->clicks = $subject[0]->clicks+1;
         $subject[0]->push();
 
         $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->get();
-        $subject[0]->users[0]->amount = $subject[0]->users[0]->amount+($cpmp->amount/1000);
+        if($subject[0]->users[0]->cpm_a == '0'){
+            $cpm = CPM::where('role_id',2)->orderBy('id', 'desc')->first();
+            $cpmp = $cpm->amount;
+        }else{
+            $cpmp = $subject[0]->users[0]->cpm_a;
+        }
+        $subject[0]->users[0]->amount = $subject[0]->users[0]->amount+($cpmp/1000);
         $subject[0]->users[0]->clicks_a = $subject[0]->users[0]->clicks_a+1;
         $subject[0]->push();
     

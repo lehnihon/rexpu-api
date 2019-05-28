@@ -18,7 +18,7 @@ class UserController extends Controller
     }
 
     public function index(User $user){
-        $userAll = $user->orderBy('id', 'desc')->get();
+        $userAll = $user->orderBy('id', 'desc')->with(['role'])->get();
         return response()->json($userAll);
     }
 
@@ -95,6 +95,25 @@ class UserController extends Controller
         }
         if(!empty($request->cpf)){
             $user->cpf = $request->cpf;
+        }
+        if(isset($request->cpm_a)){
+            $user->cpm_a = $request->cpm_a;
+        }
+        if(isset($request->cpm_b)){
+            $user->cpm_b = $request->cpm_b;
+        }
+        if(isset($request->role)){
+            $roles = array();
+            if($request->role['adm']){
+                $roles[] = 1;
+            }
+            if($request->role['pub']){
+                $roles[] = 2;
+            }
+            if($request->role['red']){
+                $roles[] = 3;
+            }
+            $user->role()->attach($roles);
         }
         $user->save();
         return response()->json(["error" => ""],200);

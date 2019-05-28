@@ -30,11 +30,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
 
-    public function config()
-    {
-        return $this->belongsTo('App\Config');
-    }
-
     public function role()
     {
         return $this->belongsToMany('App\Role');
