@@ -17,9 +17,9 @@ class TicketController extends Controller
         //
     }
 
-    public function index(Ticket $ticket){
-        $ticketAll = $ticket->orderBy('id', 'desc')->get();
-        return response()->json($ticketAll);
+    public function index(){
+        $ticket = Ticket::with('user')->orderBy('id', 'desc')->get();
+        return response()->json($ticket);
     }
 
     public function store(Request $request){

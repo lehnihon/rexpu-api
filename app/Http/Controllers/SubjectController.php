@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Session;
 use App\Subject;
 use App\CPM;
 use App\User;
+use App\Click;
+use App\Indication;
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
@@ -58,30 +60,24 @@ class SubjectController extends Controller
             $query->where('link_hash',$hash);
         };
 
-        $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->get();
-        if($subject[0]->user->cpm_b == '0'){
-            $cpm = CPM::where('role_id',3)->orderBy('id', 'desc')->first();
-            $cpmr = $cpm->amount;
-        }else{
-            $cpmr = $subject[0]->user->cpm_b;
-        }
-        $subject[0]->user->amount = $subject[0]->user->amount+($cpmr/1000);
-        $subject[0]->user->clicks_b = $subject[0]->user->clicks_b+1;
-        $subject[0]->clicks = $subject[0]->clicks+1;
-        $subject[0]->push();
+        $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->first();
+        $cpmr = $this->getCPM($subject->user->cpm_b,3);
+        $this->saveIndication($subject->user,$cpmr);
+        $this->saveClick($subject,$subject->user,$cpmr,3);
+        $subject->user->amount = $subject->user->amount+$cpmr;
+        $subject->user->clicks_b = $subject->user->clicks_b+1;
+        $subject->clicks = $subject->clicks+1;
+        $subject->push();
 
-        $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->get();
-        if($subject[0]->users[0]->cpm_a == '0'){
-            $cpm = CPM::where('role_id',2)->orderBy('id', 'desc')->first();
-            $cpmp = $cpm->amount;
-        }else{
-            $cpmp = $subject[0]->users[0]->cpm_a;
-        }
-        $subject[0]->users[0]->amount = $subject[0]->users[0]->amount+($cpmp/1000);
-        $subject[0]->users[0]->clicks_a = $subject[0]->users[0]->clicks_a+1;
-        $subject[0]->push();
+        $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->first();
+        $cpmp = $this->getCPM($subject->users[0]->cpm_a,2);
+        $this->saveIndication($subject->users[0],$cpmp);
+        $this->saveClick($subject,$subject->users[0],$cpmp,2);
+        $subject->users[0]->amount = $subject->users[0]->amount+$cpmp;
+        $subject->users[0]->clicks_a = $subject->users[0]->clicks_a+1;
+        $subject->push();
     
-        return redirect()->to($subject[0]->link);
+        return redirect()->to($subject->link);
     }
 
     public function disable(Request $request){
@@ -90,4 +86,38 @@ class SubjectController extends Controller
         $subject->save();
         return response()->json(["error" => ""],200);
     }
+
+    private function saveIndication($user,$cpm){
+        $currentDt = date_create(date('Y-m-d H:i:s'));
+        $userDt = date_create($user->created_at);
+        $diff = date_diff($userDt,$currentDt);
+        if($diff->d < 32){
+            $indication = Indication::where('indicated_id',$user->id)->first();
+            if($indication){
+                $indication->clicks = $indication->clicks+1;
+                $indication->amount = $indication->amount+$cpm;
+                $indication->save();
+            }
+        }
+    }
+
+    private function saveClick($subject,$user,$value,$role){
+        $click = new Click();
+        $click->value = $value;
+        $click->clicks = $subject->clicks;
+        $click->user_id = $user->id;
+        $click->role_id = $role;
+        $click->subject_id = $subject->id;
+        $click->save();
+    }
+
+    private function getCPM($cpm,$role){
+        if($cpm == '0'){
+            $cpmStar = CPM::where('role_id',$role)->orderBy('id', 'desc')->first();
+            return ($cpmStar->amount/1000);
+        }else{
+            return ($cpm/1000);
+        }
+    }
+    
 }

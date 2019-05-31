@@ -38,7 +38,7 @@ class TicketObsController extends Controller
     }
 
     public function getByTicket($ticket){
-        $ticketObsByTicket = TicketObs::with('ticket.user')->where('ticket_id',$ticket)->orderBy('id', 'desc')->get();
+        $ticketObsByTicket = TicketObs::with('user')->where('ticket_id',$ticket)->orderBy('id', 'desc')->get();
         return response()->json($ticketObsByTicket);
     }
 

@@ -37,6 +37,7 @@ $router->group(
             $router->get('/accepted','UserController@toAccepted');
             $router->put('/','UserController@update');
             $router->get('/{id}','UserController@show');
+            $router->get('/full/{id}','UserController@showFull');
         });
         $router->group(['prefix' => 'subject'], function() use ($router) {
             $router->get('/','SubjectController@index');
@@ -64,8 +65,14 @@ $router->group(
         $router->group(['prefix' => 'financial'], function() use ($router) {
             $router->get('/','FinancialController@index');
             $router->post('/','FinancialController@store');
-            $router->post('/{id}','FinancialController@update');
+            $router->post('/aproved/{id}','FinancialController@update');
+            $router->post('/naproved/{id}','FinancialController@updateb');
             $router->get('/user/{id}','FinancialController@getByUser');
+        });
+        $router->group(['prefix' => 'indication'], function() use ($router) {
+            $router->get('/','IndicationController@index');
+            $router->put('/{id}','IndicationController@update');
+            $router->post('/link','IndicationController@link');
         });
         $router->group(['prefix' => 'general-config'], function() use ($router) {
             $router->get('/','GeneralConfigController@index');

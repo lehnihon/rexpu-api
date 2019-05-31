@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGeneralConfigsTable extends Migration
+class CreateClicksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateGeneralConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('general_configs', function (Blueprint $table) {
+        Schema::create('clicks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->float('perc_member', 5, 2);
-            $table->string('indication_link');
+            $table->bigInteger('user_id');
+            $table->bigInteger('subject_id');
+            $table->bigInteger('clicks');
+            $table->bigInteger('role_id');
+            $table->float('value', 12, 6);
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreateGeneralConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('general_configs');
+        Schema::dropIfExists('clicks');
     }
 }

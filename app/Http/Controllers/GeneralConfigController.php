@@ -17,21 +17,27 @@ class GeneralConfigController extends Controller
         //
     }
 
-    public function index(GeneralConfig $general_config){
-        $general_configAll = $general_config->first();
-        return response()->json($general_configAll);
+    public function index(){
+        $general_config = GeneralConfig::first();
+        return response()->json($general_config);
     }
 
     public function store(Request $request){
         $general_config = new GeneralConfig;
         $general_config->perc_member = $request->perc_member;
+        $general_config->indication_link = $request->indication_link;
         $general_config->save();
         return response()->json(["error" => ""],200);
     }
 
     public function update(Request $request){
         $general_config = GeneralConfig::get()->first();
-        $general_config->perc_member = $request->perc_member;
+        if(!empty($request->perc_member)){
+            $general_config->perc_member = $request->perc_member;
+        }
+        if(!empty($request->indication_link)){
+            $general_config->indication_link = $request->indication_link;
+        }
         $general_config->save();
         return response()->json(["error" => ""],200);
     }

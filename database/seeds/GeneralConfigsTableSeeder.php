@@ -12,7 +12,8 @@ class GeneralConfigsTableSeeder extends Seeder
     public function run()
     {
         DB::table('general_configs')->insert([[
-            'perc_member' => 0
+            'perc_member' => 0,
+            'indication_link' => ''
         ]]);
     }
 }

@@ -28,6 +28,8 @@ class CreateUsersTable extends Migration
             $table->float('amount', 12, 6)->default('0');
             $table->boolean('active')->default('1');
             $table->char('accepted',1)->default('0');
+            $table->bigInteger('indication')->default('0');
+            $table->string('indication_hash');
             $table->bigInteger('clicks_a')->default('0');
             $table->bigInteger('clicks_b')->default('0');
             $table->float('cpm_a', 8, 2)->default('0');

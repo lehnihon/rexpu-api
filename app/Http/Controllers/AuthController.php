@@ -56,6 +56,20 @@ class AuthController extends BaseController
             'email'     => 'required|email',
             'password'  => 'required'
         ]);
+        // Check Active
+        $user = User::where('accepted', '1')->first();
+        if (!$user) {
+            return response()->json([
+                'error' => 'Usuário desaprovado.'
+            ], 400);
+        }
+        // Check Active
+        $user = User::where('active', '1')->first();
+        if (!$user) {
+            return response()->json([
+                'error' => 'Usuário inativo'
+            ], 400);
+        }
         // Find the user by email
         $user = User::where('email', $this->request->input('email'))->first();
         if (!$user) {
@@ -64,7 +78,7 @@ class AuthController extends BaseController
             // differents kind of responses. But let's return the 
             // below respose for now.
             return response()->json([
-                'error' => 'Email does not exist.'
+                'error' => 'Email não existe.'
             ], 400);
         }
         // Verify the password and generate the token
@@ -82,7 +96,7 @@ class AuthController extends BaseController
     public function refresh() {
         $token = $this->request->bearerToken();
         $credentials = JWT::decode($token, "@fsF3%678GLie534*kfsI", ['HS256']);
-        $user = User::find($credentials->sub);
+        $user = User::find($credentials->sub)->where('active','1')->first();
         return response()->json([
             'token' => $this->jwt($user)
         ], 200);

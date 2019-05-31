@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+Use App\Click;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -22,9 +23,20 @@ class UserController extends Controller
         return response()->json($userAll);
     }
 
-    public function show($user){
-        $user = User::find($user);
+    public function show($userid){
+        $user = User::find($userid);
         return response()->json($user);
+    }
+
+    public function showFull($userid){
+        $data = null;
+        $data['user'] = User::find($userid);
+        $data['clicks_redator'] = Click::where('user_id',$userid)->where('role_id',3)->whereDate('created_at',date('Y-m-d'))->count();
+        $data['clicks_publisher'] = Click::where('user_id',$userid)->where('role_id',2)->whereDate('created_at',date('Y-m-d'))->count();
+        $data['value_redator'] = Click::where('user_id',$userid)->where('role_id',3)->whereDate('created_at',date('Y-m-d'))->sum('value');
+        $data['value_publisher'] = Click::where('user_id',$userid)->where('role_id',2)->whereDate('created_at',date('Y-m-d'))->sum('value');
+
+        return response()->json($data);
     }
 
     public function store(Request $request){
@@ -113,7 +125,7 @@ class UserController extends Controller
             if($request->role['red']){
                 $roles[] = 3;
             }
-            $user->role()->attach($roles);
+            $user->role()->sync($roles);
         }
         $user->save();
         return response()->json(["error" => ""],200);
