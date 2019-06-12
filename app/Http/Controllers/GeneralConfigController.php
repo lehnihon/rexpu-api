@@ -25,7 +25,6 @@ class GeneralConfigController extends Controller
     public function store(Request $request){
         $general_config = new GeneralConfig;
         $general_config->perc_member = $request->perc_member;
-        $general_config->indication_link = $request->indication_link;
         $general_config->save();
         return response()->json(["error" => ""],200);
     }
@@ -34,9 +33,6 @@ class GeneralConfigController extends Controller
         $general_config = GeneralConfig::get()->first();
         if(!empty($request->perc_member)){
             $general_config->perc_member = $request->perc_member;
-        }
-        if(!empty($request->indication_link)){
-            $general_config->indication_link = $request->indication_link;
         }
         $general_config->save();
         return response()->json(["error" => ""],200);

@@ -40,15 +40,18 @@ class IndicationController extends Controller
 
     public function link(Request $request){
         $indicated = $this->saveUser($request);
-        $user = User::where('indication_hash',$request->indication_hash);
+        $user = User::where('indication_hash',$request->indication_hash)->first();
+        $user->indication = $user->indication+1;
+        $user->save();
         $this->saveIndication($user->id,$indicated);
     }
 
-    private function saveUser(){
+    private function saveUser($request){
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = app('hash')->make($request->password);
+        $user->indication_hash = bin2hex(random_bytes(10));
         $user->active = true;
         $user->save();
         return $user->id;

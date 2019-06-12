@@ -91,7 +91,7 @@ class SubjectController extends Controller
         $currentDt = date_create(date('Y-m-d H:i:s'));
         $userDt = date_create($user->created_at);
         $diff = date_diff($userDt,$currentDt);
-        if($diff->d < 32){
+        if($diff->d < 30){
             $indication = Indication::where('indicated_id',$user->id)->first();
             if($indication){
                 $indication->clicks = $indication->clicks+1;

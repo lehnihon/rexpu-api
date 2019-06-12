@@ -19,7 +19,8 @@ $router->get('/', function () use ($router) {
 
 $router->post('auth/login', 'AuthController@authenticate');
 $router->get('link/{hash}','SubjectController@link');
-
+$router->post('user/','UserController@store');
+$router->post('indication/link','IndicationController@link');
 $router->group(
     ['middleware' => 'jwt.auth'], 
     function() use ($router) {
@@ -31,7 +32,6 @@ $router->group(
         });
         $router->group(['prefix' => 'user'], function() use ($router) {
             $router->get('/','UserController@index');
-            $router->post('/','UserController@store');
             $router->post('/accepted/{id}','UserController@accepted');
             $router->post('/naccepted/{id}','UserController@notAccepted');
             $router->get('/accepted','UserController@toAccepted');
@@ -72,7 +72,6 @@ $router->group(
         $router->group(['prefix' => 'indication'], function() use ($router) {
             $router->get('/','IndicationController@index');
             $router->put('/{id}','IndicationController@update');
-            $router->post('/link','IndicationController@link');
         });
         $router->group(['prefix' => 'general-config'], function() use ($router) {
             $router->get('/','GeneralConfigController@index');

@@ -34,6 +34,7 @@ class CreateUsersTable extends Migration
             $table->bigInteger('clicks_b')->default('0');
             $table->float('cpm_a', 8, 2)->default('0');
             $table->float('cpm_b', 8, 2)->default('0');
+            $table->text('fonts')->nullable();;
             $table->timestamps();
         });
     }

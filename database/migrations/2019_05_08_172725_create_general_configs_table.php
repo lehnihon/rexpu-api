@@ -16,7 +16,6 @@ class CreateGeneralConfigsTable extends Migration
         Schema::create('general_configs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->float('perc_member', 5, 2);
-            $table->string('indication_link');
             $table->timestamps();
         });
     }

@@ -45,6 +45,10 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = app('hash')->make($request->password);
+        if(isset($request->fonts)){
+            $user->fonts = $request->fonts;
+        }
+        $user->indication_hash = bin2hex(random_bytes(10));
         $user->active = true;
         
         $user->save();
@@ -126,6 +130,9 @@ class UserController extends Controller
                 $roles[] = 3;
             }
             $user->role()->sync($roles);
+        }
+        if(isset($request->fonts)){
+            $user->fonts = $request->fonts;
         }
         $user->save();
         return response()->json(["error" => ""],200);
