@@ -17,8 +17,9 @@ class CreateSubjectsTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->string('link');
-            $table->text('obs');
-            $table->bigInteger('suggestion_id');
+            $table->bigInteger('wp_subject_id');
+            $table->string('wp_subject_modified');
+            $table->string('wp_subject_img');
             $table->bigInteger('user_id');
             $table->bigInteger('clicks')->default('0');
             $table->boolean('active')->default('1');

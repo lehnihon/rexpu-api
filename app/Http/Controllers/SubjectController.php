@@ -32,7 +32,7 @@ class SubjectController extends Controller
         $filter = function ($query) use($user) {
             $query->where('user_id',$user);
         };
-        $subject = Subject::where('active','1')->whereHas('users', $filter)->with(['users' => $filter])->get();
+        $subject = Subject::where('active','1')->whereHas('users', $filter)->with(['users' => $filter])->orderBy('id', 'desc')->get();
         return response()->json($subject);
     }
 
@@ -45,13 +45,47 @@ class SubjectController extends Controller
         $subject->link = $request->link;
         $subject->obs = $request->obs;
         $subject->user_id = $request->user_id;
-        $subject->suggestion_id = $request->suggestion_id;
         $subject->save();
         foreach($users as $user){ 
             $usersArray[$user->id] = ['link_hash' => bin2hex(random_bytes(16))];
         }
         $subject->users()->attach($usersArray);
         $subject->push();
+        return response()->json(["error" => ""],200);
+    }
+
+    public function storeList(Request $request){
+        $userid = $request->user;
+        foreach($request->subjects as $sub){
+            $check_id = Subject::where('wp_subject_id',$sub['id'])->first();
+            if(!$check_id){
+                $subject = new Subject;
+                $users = User::all();
+                $usersArray = array();
+                $subject->title = $sub['title']['rendered'];
+                $subject->link = $sub['link'];
+                $subject->wp_subject_id = $sub['id'];
+                $subject->wp_subject_modified = $sub['modified'];
+                $subject->wp_subject_img = $sub['_embedded']['wp:featuredmedia'][0]['source_url'];
+                $subject->user_id = $userid;
+                $subject->save();
+                foreach($users as $user){ 
+                    $usersArray[$user->id] = ['link_hash' => bin2hex(random_bytes(16))];
+                }
+                $subject->users()->attach($usersArray);
+                $subject->push();
+            }else{
+                $check_modified = Subject::where('wp_subject_modified',$sub['modified'])->first();
+                if(!$check_modified){
+                    $check_id->title = $sub['title']['rendered'];
+                    $check_id->link = $sub['link'];
+                    $check_id->wp_subject_modified = $sub['modified'];
+                    $check_id->wp_subject_img = $sub['_embedded']['wp:featuredmedia'][0]['source_url'];
+                    $check_id->save();
+                }
+            }
+        }
+        
         return response()->json(["error" => ""],200);
     }
 

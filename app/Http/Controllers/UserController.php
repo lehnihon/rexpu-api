@@ -49,6 +49,9 @@ class UserController extends Controller
             $user->fonts = $request->fonts;
         }
         $user->indication_hash = bin2hex(random_bytes(10));
+        $user->wp_user = $request->wp_user;
+        $user->wp_login = $request->wp_login;
+        $user->wp_password = $request->wp_password;
         $user->active = true;
         
         $user->save();
