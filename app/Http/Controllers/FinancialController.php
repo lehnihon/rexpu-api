@@ -25,15 +25,29 @@ class FinancialController extends Controller
     }
 
     public function store(Request $request){
-        $financial = new Financial;
 
-        $financial->title = $request->title;
-        $financial->done = false;
-        $financial->amount = $request->amount;
-        $financial->receipt = '';
-        $financial->obs = $request->obs;
-        $financial->user_id = $request->user_id;
-        $financial->save();
+        $user = User::find($request->user_id);
+
+        if($user->amount >= $request->amount){
+            if(($user->amount - $user->amount_blocked) >= $request->amount){
+                $financial = new Financial;
+
+                $financial->title = $request->title;
+                $financial->done = false;
+                $financial->amount = $request->amount;
+                $financial->receipt = '';
+                $financial->obs = $request->obs;
+                $financial->user_id = $request->user_id;
+                $financial->save();
+
+                $user->amount_blocked = $user->amount_blocked+$request->amount;
+                $user->save();
+            }else{
+                return response()->json(["error" => "Saque já solicitado, você tem saques em aberto"],400);
+            }
+        }else{
+            return response()->json(["error" => "Créditos insuficientes"],400);
+        }
         return response()->json(["error" => ""],200);
     }
     
@@ -65,7 +79,8 @@ class FinancialController extends Controller
         $financial->title = $request->title;
         $financial->done = true;
         $financial->obs = $request->obs;
-        $financial->save();
+        $financial->user->amount_blocked = $financial->user->amount_blocked- $financial->amount;
+        $financial->push();
         return response()->json(["error" => ""],200);
     }
 
@@ -78,6 +93,7 @@ class FinancialController extends Controller
         $user = User::find($id);
         $amountBefore = $user->amount;
         $user->amount = ($user->amount-$amount);
+        $user->amount_blocked = ($user->amount_blocked-$amount);
         $user->save();
 
         $transaction = new Transaction();

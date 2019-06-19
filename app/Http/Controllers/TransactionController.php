@@ -17,18 +17,11 @@ class TransactionController extends Controller
         //
     }
 
-    public function index(CPM $cpm){
-        $cpmAll = $cpm::with('role')->orderBy('id', 'desc')->get();
-        return response()->json($cpmAll);
-    }
-
-    public function store(Request $request){
-        $cpm = new CPM;
-
-        $cpm->role_id = $request->role_id;
-        $cpm->amount = $request->amount;
-        $cpm->save();
-        return response()->json(["error" => ""],200);
+    public function index(Request $request){
+        $from = $request->from;
+        $to = $request->to;
+        $transaction = Transaction::with('user')->whereBetween('created_at', [$from." 00:00" , $to." 23:59"])->orderBy('id', 'desc')->get();
+        return response()->json($transaction);
     }
 
 }

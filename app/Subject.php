@@ -19,5 +19,11 @@ class Subject extends Model
             ->withPivot('link_hash')
     	    ->withTimestamps();
     }
-    
+
+
+    public function clicks()
+    {
+        return $this->hasMany('App\Click');
+    }
+
 }

@@ -37,4 +37,12 @@ class SuggestionController extends Controller
         
         return response()->json(["error" => ""],200);
     }
+
+
+    public function delete($id){
+        $suggestion = Suggestion::find($id);
+        $suggestion->delete();
+        return response()->json(["error" => ""],200);
+    }
+    
 }

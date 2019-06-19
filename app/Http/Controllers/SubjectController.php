@@ -32,7 +32,7 @@ class SubjectController extends Controller
         $filter = function ($query) use($user) {
             $query->where('user_id',$user);
         };
-        $subject = Subject::where('active','1')->whereHas('users', $filter)->with(['users' => $filter])->orderBy('id', 'desc')->get();
+        $subject = Subject::where('active','1')->whereHas('users', $filter)->withCount(['clicks' => $filter])->with(['users' => $filter])->orderBy('id', 'desc')->get();
         return response()->json($subject);
     }
 
@@ -152,6 +152,17 @@ class SubjectController extends Controller
         }else{
             return ($cpm/1000);
         }
+    }
+
+    public function report(Request $request){
+        $user = $request->user;
+        $from = $request->from;
+        $to = $request->to;
+        $filter = function ($query) use($user,$from,$to) {
+            $query->where('user_id',$user)->whereBetween('created_at', [$from." 00:00" , $to." 23:59"]);
+        };
+        $subject = Subject::where('active','1')->withCount(['clicks' => $filter])->orderBy('id', 'desc')->get();
+        return response()->json($subject);
     }
     
 }

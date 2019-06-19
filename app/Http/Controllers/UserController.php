@@ -19,8 +19,13 @@ class UserController extends Controller
     }
 
     public function index(User $user){
-        $userAll = $user->orderBy('id', 'desc')->with(['role'])->get();
-        return response()->json($userAll);
+        $user = User::orderBy('id', 'desc')->with(['role'])->get();
+        return response()->json($user);
+    }
+
+    public function orderByEmail(){
+        $user = User::orderBy('email', 'asc')->get();
+        return response()->json($user);
     }
 
     public function show($userid){
@@ -103,8 +108,15 @@ class UserController extends Controller
         if(!empty($request->wp_password)){
             $user->wp_password = $request->wp_password;
         }
-        if(!empty($request->bank)){
-            $user->bank = $request->bank;
+        if(!empty($request->favored)){
+            $user->favored = $request->favored;
+        }
+        if(!empty($request->type)){
+            $user->type = $request->type;
+        }
+
+        if(!empty($request->bank_id)){
+            $user->bank_id = $request->bank_id;
         }
         if(!empty($request->agency)){
             $user->agency = $request->agency;
