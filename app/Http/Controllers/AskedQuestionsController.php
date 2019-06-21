@@ -36,4 +36,10 @@ class AskedQuestionsController extends Controller
         return response()->json(["error" => ""],200);
     }
 
+    public function delete($id){
+        $asked_questions = AskedQuestions::find($id);
+        $asked_questions->delete();
+        return response()->json(["error" => ""],200);
+    }
+
 }

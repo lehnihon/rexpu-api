@@ -20,7 +20,7 @@ class FinancialController extends Controller
     }
 
     public function index(){
-        $financial = Financial::with('user')->orderBy('id', 'desc')->get();
+        $financial = Financial::with('user')->with('user.bank')->orderBy('id', 'desc')->get();
         return response()->json($financial);
     }
 
@@ -56,7 +56,7 @@ class FinancialController extends Controller
         $financial->title = $request->title;
         $financial->done = true;
         $financial->obs = $request->obs;
-        if($request->receipt->isValid()){
+        if(!empty($request->receipt)){
             if($request->receipt->getSize() < 5000000){
                 $filename = date('ymdhis').".".$request->receipt->extension();
                 $financial->receipt = $filename;
@@ -64,8 +64,6 @@ class FinancialController extends Controller
             }else{
                 return response()->json(["error" => "Arquivo maior que 5mb"],400);
             }
-        }else{
-            $financial->receipt = '';
         }
         $financial->save();
         

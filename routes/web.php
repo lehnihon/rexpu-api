@@ -75,6 +75,7 @@ $router->group(
         $router->group(['prefix' => 'asked-questions'], function() use ($router) {
             $router->get('/','AskedQuestionsController@index');
             $router->post('/','AskedQuestionsController@store');
+            $router->delete('/{id}','AskedQuestionsController@delete');
         });
         $router->group(['prefix' => 'financial'], function() use ($router) {
             $router->get('/','FinancialController@index');
