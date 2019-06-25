@@ -36,6 +36,18 @@ $router->group(
             $router->post('/','BankController@store');
             $router->put('/','BankController@update');
         });
+        $router->group(['prefix' => 'partner'], function() use ($router) {
+            $router->get('/','PartnerController@index');
+            $router->get('/active','PartnerController@active');
+            $router->post('/','PartnerController@store');
+            $router->put('/','PartnerController@update');
+        });
+        $router->group(['prefix' => 'earning'], function() use ($router) {
+            $router->get('/','EarningController@index');
+            $router->post('/','EarningController@store');
+            $router->post('/report','EarningController@report');
+            $router->delete('/{id}','EarningController@delete');
+        });
         $router->group(['prefix' => 'user'], function() use ($router) {
             $router->get('/','UserController@index');
             $router->get('/order','UserController@orderByEmail');

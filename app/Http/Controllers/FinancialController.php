@@ -27,20 +27,20 @@ class FinancialController extends Controller
     public function store(Request $request){
 
         $user = User::find($request->user_id);
-
-        if($user->amount >= $request->amount){
-            if(($user->amount - $user->amount_blocked) >= $request->amount){
+        $amount = str_replace(",",".",$request->amount);
+        if($user->amount >= $amount){
+            if(($user->amount - $user->amount_blocked) >= $amount){
                 $financial = new Financial;
 
                 $financial->title = $request->title;
                 $financial->done = false;
-                $financial->amount = $request->amount;
+                $financial->amount = $amount;
                 $financial->receipt = '';
                 $financial->obs = $request->obs;
                 $financial->user_id = $request->user_id;
                 $financial->save();
 
-                $user->amount_blocked = $user->amount_blocked+$request->amount;
+                $user->amount_blocked = $user->amount_blocked+$amount;
                 $user->save();
             }else{
                 return response()->json(["error" => "Saque já solicitado, você tem saques em aberto"],400);

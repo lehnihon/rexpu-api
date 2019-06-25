@@ -26,7 +26,7 @@ class CPMController extends Controller
         $cpm = new CPM;
 
         $cpm->role_id = $request->role_id;
-        $cpm->amount = $request->amount;
+        $cpm->amount = str_replace(",",".",$request->amount);
         $cpm->save();
         return response()->json(["error" => ""],200);
     }
