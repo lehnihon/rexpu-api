@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 Use App\Click;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -49,6 +50,7 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->password = app('hash')->make($request->password);
         if(isset($request->fonts)){
             $user->fonts = $request->fonts;
@@ -58,7 +60,25 @@ class UserController extends Controller
         $user->wp_login = $request->wp_login;
         $user->wp_password = $request->wp_password;
         $user->active = true;
+        $data['from'] = "contato@gohost.com";
+        $data['to'] = "kenji.ccp@gmail.com";
+        $data['subject'] = "Bem vindo à WINUP!";
+        $data['content'] = "<h1 style='text-align:center'>Bem vindo à WINUP!</h1><br><br>
+        <p style='text-align:center'>Aguarde a aprovação para ter acesso a nossa plataforma!</p><br>
+        <p>
+        <strong>Email de acesso:</strong>$request->email
+        </p>
+        <p>
+        <strong>Senha de acesso:</strong>$request->password
+        </p>";
         
+        Mail::send([], [], function($message) use ($data) {
+            $message->from($data['from']);
+            $message->to($data['to']);
+            $message->subject($data['subject']);
+            $message->setBody($data['content'], 'text/html');
+        });
+
         $user->save();
         return response()->json(["error" => ""],200);
     }
@@ -92,6 +112,9 @@ class UserController extends Controller
         }
         if(!empty($request->password)){
             $user->password = app('hash')->make($request->password);
+        }
+        if(!empty($request->phone)){
+            $user->phone = $request->phone;
         }
         if(isset($request->accepted)){
             $user->accepted = $request->accepted;

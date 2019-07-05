@@ -66,7 +66,11 @@ class SubjectController extends Controller
                 $subject->link = $sub['link'];
                 $subject->wp_subject_id = $sub['id'];
                 $subject->wp_subject_modified = $sub['modified'];
-                $subject->wp_subject_img = $sub['_embedded']['wp:featuredmedia'][0]['source_url'];
+                if(!empty($sub['_embedded']['wp:featuredmedia'])){
+                    $subject->wp_subject_img = $sub['_embedded']['wp:featuredmedia'][0]['source_url'];
+                }else{
+                    $subject->wp_subject_img = '';
+                }
                 $subject->user_id = $userid;
                 $subject->save();
                 foreach($users as $user){ 
@@ -80,7 +84,11 @@ class SubjectController extends Controller
                     $check_id->title = $sub['title']['rendered'];
                     $check_id->link = $sub['link'];
                     $check_id->wp_subject_modified = $sub['modified'];
-                    $check_id->wp_subject_img = $sub['_embedded']['wp:featuredmedia'][0]['source_url'];
+                    if(!empty($sub['_embedded']['wp:featuredmedia'])){
+                        $check_id->wp_subject_img = $sub['_embedded']['wp:featuredmedia'][0]['source_url'];
+                    }else{
+                        $check_id->wp_subject_img = $sub['_embedded']['wp:featuredmedia'][0]['source_url'];
+                    }
                     $check_id->save();
                 }
             }
