@@ -19,6 +19,7 @@ class CreateClicksTable extends Migration
             $table->bigInteger('subject_id');
             $table->bigInteger('clicks');
             $table->bigInteger('role_id');
+            $table->string('ip');
             $table->float('value', 12, 6);
             $table->timestamps();
         });

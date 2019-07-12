@@ -97,28 +97,33 @@ class SubjectController extends Controller
         return response()->json(["error" => ""],200);
     }
 
-    public function link($hash){
+    public function link($hash, Request $request){
+        $ip = $request->ip();
+
         $filter = function ($query) use($hash) {
             $query->where('link_hash',$hash);
         };
 
         $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->first();
-        $cpmr = $this->getCPM($subject->user->cpm_b,3);
-        $this->saveIndication($subject->user,$cpmr);
-        $this->saveClick($subject,$subject->user,$cpmr,3);
-        $subject->user->amount = $subject->user->amount+$cpmr;
-        $subject->user->clicks_b = $subject->user->clicks_b+1;
-        $subject->clicks = $subject->clicks+1;
-        $subject->push();
+        $click = Click::where('ip',$ip)->where('subject_id',$subject->id)->first();
 
-        $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->first();
-        $cpmp = $this->getCPM($subject->users[0]->cpm_a,2);
-        $this->saveIndication($subject->users[0],$cpmp);
-        $this->saveClick($subject,$subject->users[0],$cpmp,2);
-        $subject->users[0]->amount = $subject->users[0]->amount+$cpmp;
-        $subject->users[0]->clicks_a = $subject->users[0]->clicks_a+1;
-        $subject->push();
-    
+        if(!$click){
+            $cpmr = $this->getCPM($subject->user->cpm_b,3);
+            $this->saveIndication($subject->user,$cpmr);
+            $this->saveClick($subject,$subject->user,$cpmr,3,$ip);
+            $subject->user->amount = $subject->user->amount+$cpmr;
+            $subject->user->clicks_b = $subject->user->clicks_b+1;
+            $subject->clicks = $subject->clicks+1;
+            $subject->push();
+
+            $subject = Subject::whereHas('users', $filter)->with(['users' => $filter])->first();
+            $cpmp = $this->getCPM($subject->users[0]->cpm_a,2);
+            $this->saveIndication($subject->users[0],$cpmp);
+            $this->saveClick($subject,$subject->users[0],$cpmp,2,$ip);
+            $subject->users[0]->amount = $subject->users[0]->amount+$cpmp;
+            $subject->users[0]->clicks_a = $subject->users[0]->clicks_a+1;
+            $subject->push();
+        }
         return redirect()->to($subject->link);
     }
 
@@ -143,13 +148,14 @@ class SubjectController extends Controller
         }
     }
 
-    private function saveClick($subject,$user,$value,$role){
+    private function saveClick($subject,$user,$value,$role,$ip){
         $click = new Click();
         $click->value = $value;
         $click->clicks = $subject->clicks;
         $click->user_id = $user->id;
         $click->role_id = $role;
         $click->subject_id = $subject->id;
+        $click->ip = $ip;
         $click->save();
     }
 

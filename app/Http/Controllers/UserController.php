@@ -20,7 +20,7 @@ class UserController extends Controller
     }
 
     public function index(User $user){
-        $user = User::orderBy('id', 'desc')->with(['role'])->get();
+        $user = User::orderBy('id', 'desc')->with(['role'])->with('bank')->get();
         return response()->json($user);
     }
 
@@ -60,26 +60,22 @@ class UserController extends Controller
         $user->wp_login = $request->wp_login;
         $user->wp_password = $request->wp_password;
         $user->active = true;
-        $data['from'] = "contato@gohost.com";
-        $data['to'] = "kenji.ccp@gmail.com";
-        $data['subject'] = "Bem vindo à WINUP!";
-        $data['content'] = "<h1 style='text-align:center'>Bem vindo à WINUP!</h1><br><br>
-        <p style='text-align:center'>Aguarde a aprovação para ter acesso a nossa plataforma!</p><br>
-        <p>
-        <strong>Email de acesso:</strong>$request->email
-        </p>
-        <p>
-        <strong>Senha de acesso:</strong>$request->password
-        </p>";
-        
-        Mail::send([], [], function($message) use ($data) {
-            $message->from($data['from']);
-            $message->to($data['to']);
-            $message->subject($data['subject']);
-            $message->setBody($data['content'], 'text/html');
-        });
-
         $user->save();
+        $user->role()->sync([2]);
+        $user->save();
+
+        $to = $user->email;
+        $subject = "Bem vindo à WINUP!";
+        $content = "<h1 style='text-align:center'>Bem vindo à WINUP!</h1><br><br>
+        <p style='text-align:center'>Aguarde a aprovação para ter acesso a nossa plataforma!</p><br>
+        <p style='text-align:center'>
+        <strong>Email de acesso: </strong>$request->email
+        </p>
+        <p style='text-align:center'>
+        <strong>Senha de acesso: </strong>$request->password
+        </p>";
+        $this->sendEmail($to,$subject,$content);
+
         return response()->json(["error" => ""],200);
     }
 
@@ -88,10 +84,65 @@ class UserController extends Controller
         return response()->json($userAll);
     }
 
+    private function sendEmail($to,$subject,$content){
+        $data['from'] = "contato@gohost.com";
+        $data['to'] = $to;
+        $data['subject'] = $subject;
+        $data['content'] = $content;
+        
+        Mail::send([], [], function($message) use ($data) {
+            $message->from($data['from']);
+            $message->to($data['to']);
+            $message->subject($data['subject']);
+            $message->setBody($data['content'], 'text/html');
+        });
+    }
+
+    public function forgotPass(Request $request)
+    {
+        if(!empty($request->email)){
+            $user = User::where('email',$request->email)->first();
+            $user->pass_hash = bin2hex(random_bytes(10));
+            $user->save();
+            
+            if($user){
+                $link = $request->link.$user->pass_hash;
+                $to = $user->email;
+                $subject = "Esqueceu a Senha? - WINUP";
+                $content = "<h1 style='text-align:center'>Acesse e registre sua nova senha!</h1><br><br>
+                <p style='text-align:center'>
+                <strong>Link de acesso: </strong><a target='_blank' href='$link'>$link</a>
+                </p>";
+                $this->sendEmail($to,$subject,$content);
+            }
+        }
+        return response()->json(["error" => ""],200);
+    }
+
+    public function updatePass(Request $request)
+    {
+        if(!empty($request->pass_hash)){
+            $user = User::where('pass_hash',$request->pass_hash)->first();
+            $user->password = app('hash')->make($request->password);
+            $user->pass_hash = '';
+            $user->save();
+        }
+        return response()->json(["error" => ""],200);
+    }
+
     public function accepted($user){
         $user = User::find($user);
         $user->accepted = '1';
         $user->save();
+
+        $to = $user->email;
+        $subject = "Aprovação! - WINUP";
+        $content = "<h1 style='text-align:center'>Seu cadastro acaba de ser aprovado!</h1><br><br>
+        <p style='text-align:center'>
+        <strong>Email de acesso: </strong>$user->email
+        </p>";
+        $this->sendEmail($to,$subject,$content);
+
         return response()->json(["error" => ""],200);
     }
 

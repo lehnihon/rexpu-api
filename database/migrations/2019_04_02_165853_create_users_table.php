@@ -34,6 +34,7 @@ class CreateUsersTable extends Migration
             $table->char('accepted',1)->default('0');
             $table->bigInteger('indication')->default('0');
             $table->string('indication_hash');
+            $table->string('pass_hash')->nullable();
             $table->bigInteger('clicks_a')->default('0');
             $table->bigInteger('clicks_b')->default('0');
             $table->float('cpm_a', 8, 2)->default('0');

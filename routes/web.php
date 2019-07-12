@@ -20,7 +20,10 @@ $router->get('/', function () use ($router) {
 $router->post('auth/login', 'AuthController@authenticate');
 $router->get('link/{hash}','SubjectController@link');
 $router->post('user/','UserController@store');
+$router->post('user/forgot','UserController@forgotPass');   
+$router->put('user/forgot','UserController@updatePass'); 
 $router->post('indication/link','IndicationController@link');
+
 $router->group(
     ['middleware' => 'jwt.auth'], 
     function() use ($router) {
